@@ -42,6 +42,7 @@ petrole = make_dataframe_from_pegase("pegase_prix_petrole_particulier.csv")
 
 bois.drop(columns=['Une tonne de granulés de bois en sacs', '100 kWh PCI de bois en sacs'], inplace=True)
 petrole.drop(columns=["Tarif d'une tonne de propane en citerne","100 kWh PCI de propane en citerne", "100 kWh PCS de propane",
+                      "Un litre d'essence ordinaire",  
                     "100 kWh PCI de propane", "100 kWh PCI de FOD au tarif C1"], inplace=True)  # doublons
 
 electricite = pd.read_csv('prix_reglemente_electricite.csv', sep=';', decimal=',', parse_dates=['DATE_DEBUT'])
@@ -63,9 +64,10 @@ energie = pd.concat([petrole, bois, electricite])
 
 years =np.arange(petrole.index.min().year, petrole.index.max().year+1)
 
-app = dash.Dash()
+app = dash.Dash(__name__)
+server = app.server
 app.layout = html.Div(children=[
-    html.H3(children='Évolution des prix de différentes énergies'),
+    html.H3(children='Évolution des prix de différentes énergies en France'),
     html.Div([ dcc.Graph(id='main-graph'), ], style={'width':'100%', }),
     html.Div([
         html.Div([ html.Div('Prix'),
@@ -114,6 +116,7 @@ app.layout = html.Div(children=[
         En cliquant ou double-cliquant sur les lignes de la légende, vous choisissez les courbes à afficher.
         
         Notes :
+           * FOD est le fioul domestique.
            * Pour les prix relatifs, seules les énergies fossiles sont prises en compte par manque de données pour les autres.
            * Sources : 
               * [base Pégase](http://developpement-durable.bsocom.fr/Statistiques/) du ministère du développement durable
@@ -146,16 +149,17 @@ def update_graph(price_type, month, year, xaxis_type):
     else:
         df = petrole.copy()
         df /= df.loc[f"{year}-{month}-15"]
-    fig = px.line(df[df.columns[0]])
+    fig = px.line(df[df.columns[0]], template='plotly_white')
     for c in df.columns[1:]:
         fig.add_scatter(x = df.index, y=df[c], mode='lines', name=c, text=c)
-    ytitle = ['Prix en €', 'Prix en € pour 1 MJ', 'Prix relative (sans unité)']
+    ytitle = ['Prix en €', 'Prix en € pour 1 mégajoule', 'Prix relative (sans unité)']
     fig.update_layout(
         #title = 'Évolution des prix de différentes énergies',
         yaxis = dict( title = ytitle[price_type],
                       type= 'linear' if xaxis_type == 'Linéaire' else 'log',),
         height=450,
         hovermode='closest',
+        legend = {'title': 'Énergie'},
     )
     return fig
 
