@@ -41,4 +41,4 @@ RUN pip3 install -r requirements.txt
 ADD apps.tgz .
 
 # Finally, run gunicorn.
-CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:8000", "essence:server"]
+CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:8000", "delta:server"]

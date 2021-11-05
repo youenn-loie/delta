@@ -2,11 +2,11 @@ run:
 	python3 essence.py
 
 docker:
-	tar czvf apps.tgz *py *csv assets/
+	tar czvf apps.tgz delta.py */
 	docker build -t oricou/delta .
 
 docker_no_cache:
-	tar czvf apps.tgz *py *csv assets/
+	tar czvf apps.tgz delta.py */
 	docker build --no-cache -t oricou/delta .
 
 install:

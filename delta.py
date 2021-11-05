@@ -7,6 +7,7 @@ from population import population
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__,  title="Delta", suppress_callback_exceptions=True) # , external_stylesheets=external_stylesheets)
+server = app.server
 pop = population.WorldPopulationStats(app)
 nrg = energies.Energies(app)
 
