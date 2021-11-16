@@ -12,17 +12,31 @@ pop = population.WorldPopulationStats(app)
 nrg = energies.Energies(app)
 
 main_layout = html.Div([
-    dcc.Location(id='url', refresh=False),
-    html.Div(id='page_content'),
-    dcc.Link(id='index_name', href='/'),
+    html.Div(className = "row",
+             children=[ 
+                 dcc.Location(id='url', refresh=False),
+                 html.Div(className="two columns",
+                          children = [
+                              dcc.Markdown("## Δelta δata"),
+                              dcc.Link("Évolution du prix d'énergies", href='/energies'),
+                              html.Br(),
+                              dcc.Link('Taux de natalité vs revenus', href='/population'),
+                              html.Br(),
+                              html.Br(),
+                              html.Br(),
+                              html.A('Code source', href='https://github.com/oricou/delta'),
+                          ]),
+                 html.Div(id='page_content', className="ten columns"),
+            ]),
 ])
 
-index_page = html.Div([
-    dcc.Markdown("Choisissez la présention :"),
-    dcc.Link('Energies', href='/energies'),
+
+home_page = html.Div([
     html.Br(),
-    dcc.Link('Population', href='/population'),
     html.Br(),
+    html.Br(),
+    html.Br(),
+    dcc.Markdown("Choisissez le jeu de données dans l'index à gauche."),
 ])
 
 to_be_done_page = html.Div([
@@ -34,22 +48,20 @@ app.layout = main_layout
 # "complete" layout (not sure that I need that)
 app.validation_layout = html.Div([
     main_layout,
-    index_page,
     to_be_done_page,
     pop.main_layout,
 ])
 
 # Update the index
-@app.callback([dash.dependencies.Output('page_content', 'children'),
-               dash.dependencies.Output('index_name', 'children')],
+@app.callback(dash.dependencies.Output('page_content', 'children'),
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/energies':
-        return nrg.main_layout, 'Index'
+        return nrg.main_layout
     elif pathname == '/population':
-        return pop.main_layout, 'Index'
+        return pop.main_layout
     else:
-        return index_page, ''
+        return home_page
 
 
 if __name__ == '__main__':

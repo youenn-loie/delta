@@ -96,6 +96,7 @@ class Energies():
                                disabled=True,
                            ),
                          ], style={'width': '6em', 'padding':'2em 0px 0px 0px'} ),
+                html.Div(style={'width':'2em'}),
                 html.Div([ html.Div('Échelle en x'),
                            dcc.RadioItems(
                                id='nrg-xaxis-type',
@@ -110,7 +111,7 @@ class Energies():
                             'flexDirection':'row',
                             'justifyContent':'flex-start',
                         }),
-                html.P(),
+                html.Br(),
                 dcc.Markdown("""
                 Le graphique est interactif. En passant la souris sur les courbes vous avez une infobulle. 
                 En cliquant ou double-cliquant sur les lignes de la légende, vous choisissez les courbes à afficher.
@@ -123,7 +124,6 @@ class Energies():
                       * [tarifs réglementés de l'électricité](https://www.data.gouv.fr/en/datasets/historique-des-tarifs-reglementes-de-vente-delectricite-pour-les-consommateurs-residentiels/) sur data.gouv.fr
                 """)
         ], style={
-            'borderBottom': 'thin lightgrey solid',
             'backgroundColor': 'white',
              'padding': '10px 50px 10px 50px',
              }

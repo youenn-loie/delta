@@ -16,33 +16,43 @@ class WorldPopulationStats():
         self.df = pd.read_pickle('data/subWDIdata.pkl')
         self.continent_colors = {'Asia':'gold', 'Europe':'green', 'Africa':'brown', 'Oceania':'red', 
                                  'Americas':'navy'}
+        self.french = {'Asia':'Asie', 'Europe':'Europe', 'Africa':'Afrique', 'Oceania':'Océanie', 'Americas':'Amériques'}
         self.years = sorted(set(self.df.index.values))
 
         self.main_layout = html.Div(children=[
-            html.H3(children='World Stats'),
+            html.H3(children='Évolution du taux de natalité vs le niveau moyen de revenu par pays'),
 
-            html.Div('Move the mouse over a bubble to get information about the country'), 
+            html.Div('Déplacez la souris sur une bulle pour avoir les graphiques du pays en bas.'), 
 
             html.Div([
                     html.Div([ dcc.Graph(id='wps-main-graph'), ], style={'width':'90%', }),
 
                     html.Div([
-                        html.Div('Continents:'),
+                        html.Div('Continents'),
                         dcc.Checklist(
                             id='wps-crossfilter-which-continent',
-                            options=[{'label': i, 'value': i} for i in sorted(self.continent_colors.keys())],
+                            options=[{'label': self.french[i], 'value': i} for i in sorted(self.continent_colors.keys())],
                             value=sorted(self.continent_colors.keys()),
                             labelStyle={'display':'block'},
                         ),
-                        html.P(),
-                        html.Div('X scale'),
+                        html.Br(),
+                        html.Div('Échelle en X'),
                         dcc.RadioItems(
                             id='wps-crossfilter-xaxis-type',
-                            options=[{'label': i, 'value': i} for i in ['Linear', 'Log']],
+                            options=[{'label': i, 'value': i} for i in ['Linéaire', 'Log']],
                             value='Log',
                             labelStyle={'display':'block'},
-                        )
-                    ], style={'margin-left':'15px', 'width': '8%', 'float':'right'}),
+                        ),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        html.Button(
+                            self.START,
+                            id='wps-button-start-stop', 
+                            style={'display':'inline-block'}
+                        ),
+                    ], style={'margin-left':'15px', 'width': '7em', 'float':'right'}),
                 ], style={
                     'padding': '10px 50px', 
                     'display':'flex',
@@ -67,17 +77,12 @@ class WorldPopulationStats():
                     max_intervals = -1,  # start running
                     n_intervals = 0
                 ),
-                html.Button(
-                    self.START,
-                    id='wps-button-start-stop', 
-                    style={'display':'inline-block'}
-                ),
                 ], style={
                     'padding': '0px 50px', 
                     'width':'100%'
                 }),
 
-            html.P(),
+            html.Br(),
             html.Div(id='wps-div-country'),
 
             html.Div([
@@ -87,11 +92,13 @@ class WorldPopulationStats():
                           style={'width':'33%', 'display':'inline-block', 'padding-left': '0.5%'}),
                 dcc.Graph(id='wps-pop-time-series',
                           style={'width':'33%', 'display':'inline-block', 'padding-left': '0.5%'}),
-            ], style={ 'display':'flex', 'justifyContent':'center', }),
+            ], style={ 'display':'flex', 
+                       'borderTop': 'thin lightgrey solid',
+                       'borderBottom': 'thin lightgrey solid',
+                       'justifyContent':'center', }),
 
         ], style={
-                'borderBottom': 'thin lightgrey solid',
-                'backgroundColor': 'rgb(240, 240, 240)',
+                #'backgroundColor': 'rgb(240, 240, 240)',
                  'padding': '10px 50px 10px 50px',
                  }
         )
@@ -145,19 +152,18 @@ class WorldPopulationStats():
         dfg = self.df.loc[year]
         dfg = dfg[dfg['region'].isin(regions)]
         fig = px.scatter(dfg, x = "incomes", y = "fertility", 
-                          size = "population", size_max=60, 
-                          color = "region", color_discrete_map = self.continent_colors,
-                          hover_name="Country Name", log_x=True)
+                         #title = f"{year}", cliponaxis=False,
+                         size = "population", size_max=60, 
+                         color = "region", color_discrete_map = self.continent_colors,
+                         hover_name="Country Name", log_x=True)
         fig.update_layout(
-                 title = f"{year}",
-                 xaxis = dict(title='Adjusted net national income per capita (2020 US$)',
-                              type= 'linear' if xaxis_type == 'Linear' else 'log',
-                              range=(0,100000) if xaxis_type == 'Linear' 
+                 xaxis = dict(title='Revenus net par personnes (en $ US de 2020)',
+                              type= 'linear' if xaxis_type == 'Linéaire' else 'log',
+                              range=(0,100000) if xaxis_type == 'Linéaire' 
                                               else (np.log10(50), np.log10(100000)) 
                              ),
-                 yaxis = dict(title='Child per woman', range=(0,9)),
+                 yaxis = dict(title="Nombre d'enfants par femme", range=(0,9)),
                  margin={'l': 40, 'b': 30, 't': 10, 'r': 0},
-                 height=450,
                  hovermode='closest',
                  showlegend=False,
              )
@@ -174,7 +180,7 @@ class WorldPopulationStats():
                 'height': 225,
                 'margin': {'l': 50, 'b': 20, 'r': 10, 't': 20},
                 'yaxis': {'title':title,
-                          'type': 'linear' if axis_type == 'Linear' else 'log'},
+                          'type': 'linear' if axis_type == 'Linéaire' else 'log'},
                 'xaxis': {'showgrid': False}
             }
         }
@@ -191,12 +197,12 @@ class WorldPopulationStats():
     # graph incomes vs years
     def update_income_timeseries(self, hoverData, xaxis_type):
         country = self.get_country(hoverData)
-        return self.create_time_series(country, 'incomes', xaxis_type, 'GDP per Capita (US $)')
+        return self.create_time_series(country, 'incomes', xaxis_type, 'PIB par personne (US $)')
 
     # graph children vs years
     def update_fertility_timeseries(self, hoverData, xaxis_type):
         country = self.get_country(hoverData)
-        return self.create_time_series(country, 'fertility', xaxis_type, 'Child per woman')
+        return self.create_time_series(country, 'fertility', xaxis_type, "Nombre d'enfants par femme")
 
     # graph population vs years
     def update_pop_timeseries(self, hoverData, xaxis_type):

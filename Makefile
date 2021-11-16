@@ -1,5 +1,5 @@
 run:
-	python3 essence.py
+	python3 delta.py
 
 docker:
 	tar czvf apps.tgz delta.py */
