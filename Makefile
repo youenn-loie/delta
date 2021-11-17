@@ -1,5 +1,5 @@
 run:
-	python3 delta.py
+	poetry run python delta.py
 
 docker:
 	tar czvf apps.tgz delta.py */
