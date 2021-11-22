@@ -1,0 +1,70 @@
+import pandas as pd
+import datetime
+import dateutil as du
+import requests
+from bs4 import BeautifulSoup
+import sys
+import pathlib
+
+
+def parse_date_with_00(s):
+    try:
+        res = du.parser.parse(s)
+    except:
+        s = s[:4] + max(s[4:6], "01") + max(s[6:8], "01") + " 06"  # 6 h pour indiquer que la date est fausse
+        res = du.parser.parse(s)
+    return res
+
+def death_dataframe(data):
+    res = []
+    for li in data.split('\n'):
+        try:
+            nom_prenom = li[:80].split('/')[0]
+            nom = nom_prenom.split('*')[0]
+            prenoms = nom_prenom.split('*')[1].split(' ')
+            sexe = li[80] == "1"    # True si homme, False si femme (1 et 0 en informatique)
+            naissance = parse_date_with_00(li[81:89])
+            code_postal_naissance = li[89:94]
+            commune_naissance = li[94:124].strip()
+            pays_naissance = li[124:154].strip()
+            deces = parse_date_with_00(li[154:162])
+            code_postal_deces = li[162:167]
+            acte_deces = li[167:176].strip()
+            res.append([ nom,prenoms[0],sexe, naissance, code_postal_naissance, commune_naissance, pays_naissance,
+                         deces, code_postal_deces, acte_deces ])
+        except Exception as e:
+            print(e, '\n  ', li)
+    return pd.DataFrame(res, columns=['nom', 'prenom', 'sexe', 'naissance', 'cp_naissance', 'ville_naissance',
+                                      'pays_naissance', 'deces', 'cp_deces', 'acte'])
+
+url = "https://www.data.gouv.fr/fr/datasets/fichier-des-personnes-decedees/"
+html_page = requests.get(url)
+doc = BeautifulSoup(html_page.text, "lxml")
+filenames = {}
+for link in doc.find_all('a'):
+    if "https://static.data.gouv.fr/resources/fichier-des-personnes-decedees" in link.get('href'):
+        filename = link.get('href').split('/')[-1]
+        if len(filename) > len('deces-2020.txt'):
+            continue
+        filenames[filename] = link.get('href')
+current_year = datetime.datetime.now().year
+for decade in range(1970, current_year, 10):
+    backup = f"data/deces-{decade}-{min(current_year-1,decade+9)}.pkl"
+    if pathlib.Path(backup).is_file() or pathlib.Path(backup+'.bz2').is_file():
+        continue
+    res = []
+    for year in range(decade, min(decade+10, current_year)):
+        filename = f"deces-{year}.txt"
+        print(filename)
+        try:  
+            data = requests.get(filenames[filename])
+            res.append(death_dataframe(data.content.decode('UTF-8')))
+        except:  # parfois il y a un problème de formatage
+            !wget -O /tmp/{filename} {filenames[filename]}
+            with open(f"/tmp/{filename}", encoding='ISO-8859-1') as f:
+                res.append(death_dataframe(f.read()))
+            !rm -f /tmp/{filename}
+    df = pd.concat(res)
+    print(f"sauvegarde {backup}")
+    df.to_pickle(backup)
+    !bzip2 {backup}
