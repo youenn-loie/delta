@@ -1,3 +1,5 @@
+#!/usr/bin/env ipython
+
 import pandas as pd
 import datetime
 import dateutil as du
@@ -50,21 +52,36 @@ for link in doc.find_all('a'):
 current_year = datetime.datetime.now().year
 for decade in range(1970, current_year, 10):
     backup = f"data/deces-{decade}-{min(current_year-1,decade+9)}.pkl"
-    if pathlib.Path(backup).is_file() or pathlib.Path(backup+'.bz2').is_file():
-        continue
-    res = []
-    for year in range(decade, min(decade+10, current_year)):
-        filename = f"deces-{year}.txt"
-        print(filename)
-        try:  
-            data = requests.get(filenames[filename])
-            res.append(death_dataframe(data.content.decode('UTF-8')))
-        except:  # parfois il y a un problème de formatage
-            !wget -O /tmp/{filename} {filenames[filename]}
-            with open(f"/tmp/{filename}", encoding='ISO-8859-1') as f:
-                res.append(death_dataframe(f.read()))
-            !rm -f /tmp/{filename}
-    df = pd.concat(res)
-    print(f"sauvegarde {backup}")
-    df.to_pickle(backup)
-    !bzip2 {backup}
+    short = f"data/morts_par_jour-{decade}-{min(current_year-1,decade+9)}.pkl"
+    if not (pathlib.Path(backup).is_file() or pathlib.Path(backup+'.bz2').is_file()):
+        res = []
+        for year in range(decade, min(decade+10, current_year)):
+            filename = f"deces-{year}.txt"
+            print(filename)
+            try:  
+                data = requests.get(filenames[filename])
+                res.append(death_dataframe(data.content.decode('UTF-8')))
+            except:  # parfois il y a un problème de formatage
+                !wget -O /tmp/{filename} {filenames[filename]}
+                with open(f"/tmp/{filename}", encoding='ISO-8859-1') as f:
+                    res.append(death_dataframe(f.read()))
+                !rm -f /tmp/{filename}
+        df = pd.concat(res)
+        print(f"sauvegarde {backup}")
+        df.to_pickle(backup)
+        !bzip2 {backup}
+    elif not (pathlib.Path(short).is_file() or pathlib.Path(short+'.bz2').is_file()):
+        try:
+            df = pd.read_pickle(backup)[['sexe', 'deces']]
+        except:
+            df = pd.read_pickle(backup+'.bz2')[['sexe', 'deces']]
+        df['hour'] = df.deces.apply(lambda x: x.hour)
+        df = df[df.hour != 6]  # on retire les dates de décès imprécises
+        df.drop(columns = ['hour'], inplace = True)
+        df.rename(columns={'sexe':'morts'}, inplace=True)
+        df = df.set_index('deces')
+        df.sort_index(inplace=True)
+        df = df.groupby(pd.Grouper(freq='D')).count()
+        print(f"sauvegarde {short}")
+        df.to_pickle(short)
+
