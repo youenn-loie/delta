@@ -19,23 +19,32 @@ class Deces():
         df.sort_index(inplace=True)
         df = df.loc['1973':]
 
-
-        pente, v0 = np.polyfit(np.arange(len(df)), df.morts.values, 1)
-        y = fft.fft(df.morts)
-        y[y<30*len(df)] = 0
-        prediction = fft.ifft(y)
-        prediction -= df.morts.mean() - v0
-        prediction += np.cumsum([pente,]*len(df))
+        # calcul de la moyenne journalière avec des fenêtres
+        width = 10
+        prediction = pd.DataFrame({'x':np.zeros(len(df))}, index=df.index)
+        prediction_nb = pd.DataFrame({'x':np.zeros(len(df))}, index=df.index)
+        for step in range(1970, df.index[-1].year - width + 1):
+            dfp = df.loc[f'{step}':f'{step+width}']
+            pente, v0 = np.polyfit(np.arange(len(dfp)), dfp.morts.values, 1)
+            y = fft.fft(dfp.morts)
+            y[y<30*len(dfp)] = 0
+            pred = fft.ifft(y)
+            pred -= dfp.morts.mean() - v0
+            pred += np.cumsum([pente,]*len(dfp))
+            prediction.loc[f'{step}':f'{step+width}', 'x'] += pred
+            prediction_nb.loc[f'{step}':f'{step+width}','x'] += 1
+        prediction = np.array([p.real for p in prediction.x]) / prediction_nb.x
 
         self.df = df
-        self.day_mean = [p.real for p in prediction]
+        self.day_mean = prediction
 
         self.main_layout = html.Div(children=[
             html.H3(children='Nombre de morts par jour en France'),
             html.Div([ dcc.Graph(id='mpj-main-graph'), ], style={'width':'100%', }),
             html.Div([ dcc.RadioItems(id='mpj-mean', 
                                      options=[{'label':'Courbe seule', 'value':0},
-                                              {'label':'Tendence générale', 'value':1}, {'label':'Moyenne journalière', 'value':2}], 
+                                              {'label':'Tendence générale', 'value':1}, 
+                                              {'label':'Moyenne journalière (les décalages au 1er janv. indique la tendence)', 'value':2}], 
                                      value=0,
                                      labelStyle={'display':'block'}) ,
                                      ]),
@@ -51,9 +60,10 @@ class Deces():
                * On repère bien les hivers avec grippe.
                * L'année 1997 est étrange, peut-être un problème de recensement.
                * La canicule d'août 2003 a fait 15 000 morts (ce qui a généré la journée de travail non payé dite journée Raffarin).
-               * Les morts dus au Covid-19 sont bien visibles, d'autant qu'il n'y a pas eu de grippe durant les hivers 19-20 et 20-21.
+               * Les 120 000 morts dus au Covid-19 en 2020 et 2021 sont bien visibles, d'autant qu'il n'y a pas eu de grippe durant les hivers 19-20 et 20-21.
                * On note une progression constante du nombre de morts, avec environ 1100 morts par jour en dehors de pics durant les années 70 
-                 pour environ 1700 morts par jour après 2015. Il s'agit d'une augmentation de plus de 50 %, soit le double que l'augmentation de la population sur la même période.
+                 pour environ 1700 morts par jour après 2015. Il s'agit d'une augmentation de plus de 50 %, soit le double que l'augmentation de la population sur la même période. Le saut visible en 1990 peut aussi traduire un recensement plus complèt après cette année.
+               * Les derniers mois doivent être pris avec précaution car tous les morts ne sont pas encore recensés.
             """)
         ], style={
             'backgroundColor': 'white',
