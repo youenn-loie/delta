@@ -76,7 +76,7 @@ class Energies():
                                options=[{'label':'Absolu', 'value':0}, 
                                         {'label':'Équivalent J','value':1},
                                         {'label':'Relatif : 1 en ','value':2}],
-                               value=0,
+                               value=1,
                                labelStyle={'display':'block'},
                            )
                          ], style={'width': '9em'} ),
@@ -97,7 +97,7 @@ class Energies():
                            ),
                          ], style={'width': '6em', 'padding':'2em 0px 0px 0px'} ),
                 html.Div(style={'width':'2em'}),
-                html.Div([ html.Div('Échelle en x'),
+                html.Div([ html.Div('Échelle en y'),
                            dcc.RadioItems(
                                id='nrg-xaxis-type',
                                options=[{'label': i, 'value': i} for i in ['Linéaire', 'Logarithmique']],
@@ -163,7 +163,7 @@ class Energies():
             df /= df.loc[f"{year}-{month}-15"]
         fig = px.line(df[df.columns[0]], template='plotly_white')
         for c in df.columns[1:]:
-            fig.add_scatter(x = df.index, y=df[c], mode='lines', name=c, text=c)
+            fig.add_scatter(x = df.index, y=df[c], mode='lines', name=c, text=c, hoverinfo='x+y+text')
         ytitle = ['Prix en €', 'Prix en € pour 1 mégajoule', 'Prix relative (sans unité)']
         fig.update_layout(
             #title = 'Évolution des prix de différentes énergies',
