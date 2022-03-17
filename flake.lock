@@ -1,0 +1,288 @@
+{
+  "nodes": {
+    "docker-nixpkgs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1646647373,
+        "narHash": "sha256-cQguKYCU4ebZy18l6pnG5Pm0WvlXkWbi/O81d6xuUVY=",
+        "owner": "nix-community",
+        "repo": "docker-nixpkgs",
+        "rev": "41c61425af74375199902678d1af50a899d877f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "docker-nixpkgs",
+        "type": "github"
+      }
+    },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1641205782,
+        "narHash": "sha256-4jY7RCWUoZ9cKD8co0/4tFARpWB+57+r1bLLvXNJliY=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "b7547d3eed6f32d06102ead8991ec52ab0a4f1a7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1644229661,
+        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1610051610,
+        "narHash": "sha256-U9rPz/usA1/Aohhk7Cmc2gBrEEKRzcW4nwPWMPwja4Y=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3982c9903e93927c2164caa727cd3f6a0e6d14cc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "futils": {
+      "locked": {
+        "lastModified": 1644229661,
+        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "futils_2": {
+      "locked": {
+        "lastModified": 1629481132,
+        "narHash": "sha256-JHgasjPR0/J1J3DRm4KxM4zTyAj4IOJY8vIl75v/kPI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "997f7efcb746a9c140ce1f13c72263189225f482",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "futils_3": {
+      "locked": {
+        "lastModified": 1629481132,
+        "narHash": "sha256-JHgasjPR0/J1J3DRm4KxM4zTyAj4IOJY8vIl75v/kPI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "997f7efcb746a9c140ce1f13c72263189225f482",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "machine-state": {
+      "inputs": {
+        "futils": "futils_2",
+        "nixpkgs": [
+          "nixpie",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1643059135,
+        "narHash": "sha256-yfcd3OrXDcE5YaGWdF0ZUVe99rBHwPgDBGOuzZAIZpo=",
+        "ref": "master",
+        "rev": "82dee5a9ddfc9ff1971f5f5e5971098b92bd3008",
+        "revCount": 84,
+        "type": "git",
+        "url": "https://gitlab.cri.epita.fr/cri/packages/machine-state.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.cri.epita.fr/cri/packages/machine-state.git"
+      }
+    },
+    "nixpie": {
+      "inputs": {
+        "docker-nixpkgs": "docker-nixpkgs",
+        "flake-compat": "flake-compat",
+        "futils": "futils",
+        "machine-state": "machine-state",
+        "nixpkgs": "nixpkgs",
+        "nixpkgsMaster": "nixpkgsMaster",
+        "nixpkgsMaths": "nixpkgsMaths",
+        "nixpkgsUnstable": "nixpkgsUnstable",
+        "nuc-led-setter": "nuc-led-setter"
+      },
+      "locked": {
+        "lastModified": 1647363105,
+        "narHash": "sha256-39NG4IIEhUCla0E2/RVAOq7pdoHS/SogxsWc8P7YikQ=",
+        "ref": "master",
+        "rev": "fa3fee6fc4e453764dcba7c9db9cf3d80fddafa0",
+        "revCount": 369,
+        "type": "git",
+        "url": "https://gitlab.cri.epita.fr/cri/infrastructure/nixpie.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.cri.epita.fr/cri/infrastructure/nixpie.git"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1647122627,
+        "narHash": "sha256-w4hGsXYyMgJAQRSBxh7O6AAsawJSbudCxfQXhDRhwPQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "0f85665118d850aae5164d385d24783d0b16cf1b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-21.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgsMaster": {
+      "locked": {
+        "lastModified": 1647275416,
+        "narHash": "sha256-76LVF36QiPXZlLEdBdzI/UsMAov4nod9TzJrqNmghRk=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b93c5724fc6cebcda6ee57982c3311adf90c9623",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgsMaths": {
+      "locked": {
+        "lastModified": 1635952775,
+        "narHash": "sha256-sj2yj6G8tiwSaKLCiaKaLJzZCq7t7xnn0jX3SyqTehk=",
+        "owner": "rissson",
+        "repo": "nixpkgs",
+        "rev": "3a087c8041f55f89e255c92f58d9fbfc7688fb12",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rissson",
+        "ref": "nixos-maths-21.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgsUnstable": {
+      "locked": {
+        "lastModified": 1647199004,
+        "narHash": "sha256-37aHbLhcX6zqeru24AoPPfem6fUQ6are5E38NdbIgJg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "328bd3c30e4fc4c3d69bc08516f27e8d85f839b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1610729867,
+        "narHash": "sha256-bk/SBaBLqZX/PEqal27DMQwAHHl0dcZMp8NNksQr80s=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "04af07c659c6723a2259bb6bc00a47ec53330f20",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nuc-led-setter": {
+      "inputs": {
+        "futils": "futils_3",
+        "nixpkgs": [
+          "nixpie",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1643059125,
+        "narHash": "sha256-Dd1F5sGnbMrR8IlNcD7ZIaXyDtnAviRYchQWT2E914g=",
+        "ref": "master",
+        "rev": "30f95a378c1a17c7b0d867f70740c2cbc1d7dc64",
+        "revCount": 63,
+        "type": "git",
+        "url": "https://gitlab.cri.epita.fr/cri/packages/nuc-led-setter.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.cri.epita.fr/cri/packages/nuc-led-setter.git"
+      }
+    },
+    "poetry2nix": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1647207818,
+        "narHash": "sha256-sq68Z6+7On03Sxo57GJeeLQnMgByBtvW2cwGVllyOIc=",
+        "owner": "nix-community",
+        "repo": "poetry2nix",
+        "rev": "36d295a1d2b6a72af3ad5c0c8d0c358cf90db3cd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "poetry2nix",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpie": "nixpie",
+        "poetry2nix": "poetry2nix"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
