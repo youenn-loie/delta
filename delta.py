@@ -13,7 +13,7 @@ server = app.server
 pop = population.WorldPopulationStats(app)
 nrg = energies.Energies(app)
 dec = deces.Deces(app)
-bars = bars.Bars(app) #TODO: Change name (more explicit) ?
+bar = bars.Bars(app)
 
 main_layout = html.Div([
     html.Div(className = "row",
@@ -25,6 +25,8 @@ main_layout = html.Div([
                               dcc.Link(html.Button("Prix d'énergies", style={'width':"100%"}), href='/energies'),
                               html.Br(),
                               dcc.Link(html.Button('Natalité vs revenus', style={'width':"100%"}), href='/population'),
+                              html.Br(),
+                              html.Br(),
                               html.Br(),
                               dcc.Link(html.Button('Décès journaliers', style={'width':"100%"}), href='/deces'),
                               html.Br(),
@@ -71,7 +73,7 @@ def display_page(pathname):
     elif pathname == '/deces':
         return dec.main_layout
     elif pathname == '/bars':
-        return dec.main_layout #TODO
+        return bar.main_layout
     else:
         return home_page
 
