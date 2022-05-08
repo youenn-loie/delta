@@ -24,6 +24,28 @@ def init_postal_code():
     postalCodes['Longitude'] = postalCodes['Longitude'].apply(lambda long: round(long, 3))
     return postalCodes
 
+def init_data_revenus():
+    data_revenus = pd.read_excel('../../data/revenus_communes_2019.xlsx')  #header=3
+    data_revenus.drop(data_revenus.columns[[0, 3, 7, 8, 9, 10, 11, 12, 13]], axis=1, inplace=True)
+    data_revenus.drop(data_revenus.tail(2).index, inplace=True)  # drop last 2 rows
+    data_revenus.rename(columns=lambda n: data_revenus[n][2], inplace=True)
+    data_revenus.drop(index=[0, 1, 2], inplace=True)
+    data_revenus = data_revenus[data_revenus["Revenu fiscal de référence par tranche (en euros)"].str.strip() == 'TOTAL']
+    data_revenus = data_revenus[~data_revenus['Dép.'].str.startswith('B')]
+    data_revenus.insert(1, "Code commune", data_revenus['Dép.'].str.strip().apply(lambda dep: dep[:2]) + data_revenus['Commune'])
+    data_revenus.drop(["Dép.", "Commune"], axis=1, inplace=True)
+    data_revenus['Code commune'] = data_revenus['Code commune'].str.strip()
+    return data_revenus
+
+def init_code_commune():
+    code_commune = pd.read_csv('../../data/code-commune.csv', sep=';')
+    code_commune.drop(['Nom_commune', 'Ligne_5', 'Libellé_d_acheminement', 'coordonnees_gps'], axis=1, inplace=True)
+    code_commune.columns = ['Code commune', 'Postal code']
+    code_commune['Postal code'] = code_commune['Postal code'].astype(str)
+    code_commune['Postal code'] = code_commune['Postal code'].apply(
+        lambda postalCode: '0' + postalCode if (len(postalCode) < 5) else postalCode).str.strip()
+    return code_commune
+
 def init_data_bars():
     data_bars = pd.read_csv('./bars/data/osm-fr-bars.csv', sep=';')
     data_bars = data_bars[["Geo Point", "Code postal", "Nom"]]
