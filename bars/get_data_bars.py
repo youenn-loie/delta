@@ -80,6 +80,11 @@ def init_data_bars():
 
     return data_bars
 
+
+def init_barNumber():
+    data_bars = init_data_bars()
+    return data_bars.groupby(['Département'])['Département'].count().reset_index(name='Nombre de bars')
+
 # is there a reason to avoid os.system(f'tar -xvzf {filename}') and instead use zipfile (e.g. zip = ZipFile('file.zip'); zip.extractall() )
 
 #zip = ZipFile('file.zip')

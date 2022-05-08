@@ -23,7 +23,7 @@ class Bars():
 
     def __init__(self, application=None):
         data_bars = pd.read_csv('./bars/data/osm-fr-bars.csv', sep=';')
-        #postalCodes = init_postal_code()
+        # postalCodes = init_postal_code()
         data_revenus = init_data_revenus()
         code_commune = init_code_commune()
         barNumber = init_barNumber()
