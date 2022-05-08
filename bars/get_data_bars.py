@@ -25,7 +25,7 @@ def init_postal_code():
     return postalCodes
 
 def init_data_revenus():
-    data_revenus = pd.read_excel('../../data/revenus_communes_2019.xlsx')  #header=3
+    data_revenus = pd.read_excel('./bars/data/revenus_communes_2019.xlsx')  #header=3
     data_revenus.drop(data_revenus.columns[[0, 3, 7, 8, 9, 10, 11, 12, 13]], axis=1, inplace=True)
     data_revenus.drop(data_revenus.tail(2).index, inplace=True)  # drop last 2 rows
     data_revenus.rename(columns=lambda n: data_revenus[n][2], inplace=True)
@@ -38,7 +38,7 @@ def init_data_revenus():
     return data_revenus
 
 def init_code_commune():
-    code_commune = pd.read_csv('../../data/code-commune.csv', sep=';')
+    code_commune = pd.read_csv('./bars/data/code-commune.csv', sep=';')
     code_commune.drop(['Nom_commune', 'Ligne_5', 'Libellé_d_acheminement', 'coordonnees_gps'], axis=1, inplace=True)
     code_commune.columns = ['Code commune', 'Postal code']
     code_commune['Postal code'] = code_commune['Postal code'].astype(str)
@@ -66,11 +66,18 @@ def init_data_bars():
     data_bars.drop('Geo Point', 1)
 
     data_bars.isnull().sum().sum()
-
     data_bars['Latitude'] = data_bars['Latitude'].astype(float)
     data_bars['Longitude'] = data_bars['Longitude'].astype(float)
     data_bars['Latitude'] = data_bars['Latitude'].apply(lambda lat: round(lat, 3))
     data_bars['Longitude'] = data_bars['Longitude'].apply(lambda long: round(long, 3))
+
+    postalCodes = init_postal_code()
+    data_bars = pd.merge(data_bars, postalCodes, how='left', on=['Latitude', 'Longitude']).drop_duplicates()
+    data_bars["Postal code"] = data_bars["Postal code"].str.strip()
+    data_bars.dropna(subset=['Postal code'], inplace=True)
+    data_bars['Département'] = data_bars['Postal code'].apply(lambda code: str(code)[0:2])
+    data_bars.drop_duplicates(subset=['Geo Point'], inplace=True)
+
     return data_bars
 
 # is there a reason to avoid os.system(f'tar -xvzf {filename}') and instead use zipfile (e.g. zip = ZipFile('file.zip'); zip.extractall() )
