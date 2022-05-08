@@ -32,6 +32,7 @@ def init_data_revenus():
     data_revenus.drop(index=[0, 1, 2], inplace=True)
     data_revenus = data_revenus[data_revenus["Revenu fiscal de référence par tranche (en euros)"].str.strip() == 'TOTAL']
     data_revenus = data_revenus[~data_revenus['Dép.'].str.startswith('B')]
+#
     data_revenus.insert(1, "Code commune", data_revenus['Dép.'].str.strip().apply(lambda dep: dep[:2]) + data_revenus['Commune'])
     data_revenus.drop(["Dép.", "Commune"], axis=1, inplace=True)
     data_revenus['Code commune'] = data_revenus['Code commune'].str.strip()
