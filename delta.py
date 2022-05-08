@@ -73,7 +73,7 @@ def display_page(pathname):
     elif pathname == '/deces':
         return dec.main_layout
     elif pathname == '/bars':
-        return bar.main_layout
+       return bar.main_layout
     else:
         return home_page
 

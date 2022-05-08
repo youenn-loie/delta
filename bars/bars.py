@@ -14,26 +14,20 @@ import plotly.graph_objs as go
 import plotly.express as px
 import dateutil as du
 
+from bars.get_data_bars import init_postal_code
+
+
 class Bars():
 
-
     def __init__(self, application = None):
-        data_bars = pd.read_csv('../../data/osm-fr-bars.csv', sep=';')
-        #postalCodes = pd.read_csv('../../data/postal-code.csv', usecols=['01400', '46.147624', '4.923727'], dtype={'01400': str, '46.147624': np.float64, '4.923727': np.float64} )
-        data_revenus = pd.read_excel('../../data/revenus_communes_2019.xlsx')  #header=3
-        code_commune = pd.read_csv('../../data/code-commune.csv', sep=';')
-        print("coucou")
+        data_bars = pd.read_csv('./bars/data/osm-fr-bars.csv', sep=';')
+        postalCodes = init_postal_code()
+        data_revenus = pd.read_excel('./bars/data/revenus_communes_2019.xlsx')  #header=3
+        code_commune = pd.read_csv('./bars/data/code-commune.csv', sep=';')
 
         self.main_layout = html.Div(children=[
-            html.H3(children='Nombre de décès par jour en France'),
+            html.H3(children='Répartition des bars en France'),
             html.Div([ dcc.Graph(id='mpj-main-graph'), ], style={'width':'100%', }),
-            html.Div([ dcc.RadioItems(id='mpj-mean', 
-                                     options=[{'label':'Courbe seule', 'value':0},
-                                              {'label':'Tendence générale', 'value':1}, 
-                                              {'label':'Moyenne journalière (les décalages au 1er janv. indique la tendence)', 'value':2}], 
-                                     value=0,
-                                     labelStyle={'display':'block'}) ,
-                                     ]),
             html.Br(),
             dcc.Markdown("""
             Le graphique est interactif. En passant la souris sur les courbes vous avez une infobulle. 
