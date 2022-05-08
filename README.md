@@ -10,6 +10,7 @@ Ce dépôt GitHub propose des pages Jupyter et des service Dash pour analyser de
 
 * [Natalité / revenus](https://github.com/oricou/delta/tree/main/population) : exemple classique qui montre la chute de natalité à travers le monde et la croissance des revenus
 * [Prix de l'énergie](https://github.com/oricou/delta/tree/main/energies) : compare le prix grand public de différentes énergies en France
+* Répartition des bars en France : analyse la répartition des bars en France selon leur position géographique et la catégorie sociale des habitants
 
 Note : le choix du français est volontaire, il s'agit de promouvoir l'usage
        des données ouvertes auprès du grand public en France. Cela étant il

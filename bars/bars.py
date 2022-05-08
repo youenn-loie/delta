@@ -1,18 +1,6 @@
-from IPython.display import display
-from matplotlib.pyplot import bar
-import numpy as np
-import pandas as pd
-import folium
-import plotly.express as px
-import seaborn as sns
-import sys
 import dash
-import flask
 from dash import dcc
 from dash import html
-import plotly.graph_objs as go
-import plotly.express as px
-import dateutil as du
 import plotly.express as px
 import json
 
@@ -23,13 +11,12 @@ class Bars():
 
     def __init__(self, application=None):
         data_bars = init_data_bars()
-        # postalCodes = init_postal_code()
         data_revenus = init_data_revenus()
         code_commune = init_code_commune()
         barNumber = init_barNumber()
         departements = json.load(open('./bars/data/departements-version-simplifiee.geojson'))
 
-        fig = px.choropleth_mapbox(barNumber, geojson=departements,
+        fig_by_department = px.choropleth_mapbox(barNumber, geojson=departements,
                                    locations='Département', featureidkey='properties.code',  # join keys
                                    color='Nombre de bars', color_continuous_scale=px.colors.sequential.turbid,
                                    mapbox_style="carto-positron",
@@ -38,7 +25,7 @@ class Bars():
                                    opacity=0.75,
                                    labels={'prix': 'Nombre de bars'}
                                    )
-        fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+        fig_by_department.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
         fig2 = px.choropleth_mapbox(barNumber.sort_values(by='Nombre de bars'), geojson=departements,
                                    locations='Département', featureidkey='properties.code',  # join keys
                                    color='Nombre de bars', color_continuous_scale=px.colors.sequential.turbid,
@@ -101,12 +88,25 @@ class Bars():
 
         self.main_layout = html.Div(children=[
             html.H3(children='Répartition des bars en France'),
+            dcc.Markdown("""
+                    Les bars font partie intégrante de la vie des français.
+                Après le boulot, pour fêter un évènement ou encore pour sortir entre amis, on y passe tous un jour.
+                
+                Leur répartition en France n'est pas homogène, en effet des régions en habritent plus que d'autres.
+                Est-ce justifié par le taux de concentration du nombre d'habitant ? Des catégories sociales des habitants? Ou bien simplement d'être breton ?
+                
+                Nous avons essayé ici de prendre les paramètres géographiques de ces régions afin d'émettre des hypothèses quant à leur répartition en France.
+
+                    """),
             html.Div(
-                [dcc.Graph(id='sond_t2', figure=fig)], style={'width': '100%', }),
+                [dcc.Graph(id='sond_t2', figure=fig_by_department)], style={'width': '100%', }),
             html.Br(),
+            dcc.Markdown(""" Sur ce graphique nous pouvons observer le taux de bars par département.
+                        Nous remarquons que dans des régions comme la Bretagne, le Nord-Pas-de-Calais ou encore l'Ile de France le nombre de bars est plus élévé que la moyenne."""),
             html.Div(
                 [dcc.Graph(id='sond_t2', figure=fig2)], style={'width': '100%', }),
              html.Br(),
+            dcc.Markdown("""Les graphiques sont interactifs et s'animent lorsque l'utilisateur clique sur 'Play'"""),
             html.Div(
                 [dcc.Graph(id='sond_t2', figure=fig3)], style={'width': '100%', }),
              html.Br(),
@@ -118,11 +118,10 @@ class Bars():
              html.Br(),
 
             dcc.Markdown("""
-            Le graphique est interactif. En passant la souris sur les courbes vous avez une infobulle. 
-            
-            Notes :
-               * La grippe de l'hiver 1989-1990 a fait 20 000 morts (4,6 millions de malades en 11 semaines). La chute de la courbe au premier janvier 1990 est quand même très surprenante.
-               """)
+            En conclusion, nous avons vu que le taux de bars dépendait de :
+            * Nombre d'habitants (logique, plus il y a d'habitants plus il y a de bars)
+            * Par conséquent du département (là où il y a plus ou moins d'habitants)
+            """)
         ], style={
             'backgroundColor': 'white',
             'padding': '10px 50px 10px 50px',

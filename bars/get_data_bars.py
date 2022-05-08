@@ -1,19 +1,5 @@
-import zipfile
-from IPython.display import display
-from matplotlib.pyplot import bar
 import numpy as np
 import pandas as pd
-import folium
-import plotly.express as px
-import seaborn as sns
-import sys
-import dash
-import flask
-from dash import dcc
-from dash import html
-import plotly.graph_objs as go
-import plotly.express as px
-import dateutil as du
 
 
 def init_postal_code():

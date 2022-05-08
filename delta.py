@@ -26,11 +26,9 @@ main_layout = html.Div([
                               html.Br(),
                               dcc.Link(html.Button('Natalité vs revenus', style={'width':"100%"}), href='/population'),
                               html.Br(),
-                              html.Br(),
-                              html.Br(),
                               dcc.Link(html.Button('Décès journaliers', style={'width':"100%"}), href='/deces'),
                               html.Br(),
-                              dcc.Link(html.Button('Concentration des bars en France', style={'width':"100%"}), href='/bars'), #TODO:Change name?
+                              dcc.Link(html.Button('Bars en France', style={'width':"100%"}), href='/bars'),
                               html.Br(),
                               html.Br(),
                               html.Br(),
