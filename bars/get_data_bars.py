@@ -103,3 +103,7 @@ def init_nbBar_revenu_byCp(data_bars_revenus):
         data_bars_revenus.groupby('Postal code')['Nom'].nunique().reset_index(), on=['Postal code'], how='inner')
     nbBar_revenu_byCp.columns = ['Postal code', 'Revenu fiscal de référence par foyer fiscal', 'Nombre de bars']
     return nbBar_revenu_byCp
+
+def init_mean_by_bar_number(nbBar_revenu_byCp):
+    mean_by_bar_number = nbBar_revenu_byCp.groupby('Nombre de bars').mean().reset_index()
+    return mean_by_bar_number
