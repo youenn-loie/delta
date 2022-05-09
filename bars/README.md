@@ -60,7 +60,6 @@ Notre projet analyse la répartition des bars en France.
 ## Installation
 Pour lancer ce projet, vous pouvez directement faire un ``make run``.
 
-
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
@@ -69,6 +68,9 @@ Tell people where they can go to for help. It can be any combination of an issue
 
 ## Roadmap
 If you have ideas for releases in the future, it is a good idea to list them in the README.
+
+## En cas de problème
+En cas de problème de puissance de votre ordinateur, un delta.pdf est fournis dans le dossier Data. Cela représente notre page web, mais les graphes ne seront pas intéractif, et tout ne sera pas présent dessus. 
 
 ## Authors and acknowledgment
 Héloïse Fabre & Youenn Loïe
