@@ -89,37 +89,39 @@ class Bars():
                                     )
         fig6.update_layout(mapbox_style="carto-darkmatter", margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
-        # fig7 = sns.relplot(data=nbBar_revenu_byCp, x='Nombre de bars', y='Revenu fiscal de référence par foyer fiscal')
-        # fig7.set(yscale='log')
-        #
-        # mean_by_bar_number = init_mean_by_bar_number(nbBar_revenu_byCp)
-        # plt.plot(mean_by_bar_number['Nombre de bars'],
-        #          mean_by_bar_number['Revenu fiscal de référence par foyer fiscal'])
-        # plt.xlabel('Nombre de bars')
-        # plt.ylabel('Revenu fiscal de référence moyen')
-        #
-        # fig8 = px.histogram(data_frame=mean_by_bar_number, x='Revenu fiscal de référence par foyer fiscal',
-        #                    y='Nombre de bars')
-        # fig9 = sns.relplot(data=mean_by_bar_number, y='Revenu fiscal de référence par foyer fiscal',
-        #                 x=mean_by_bar_number['Nombre de bars'])
-        # fig9.set(yscale='log')
-        # nbBar_revenu_byCp = data_bars_revenus.groupby('Nom')[
-        #     'Revenu fiscal de référence par foyer fiscal'].mean().reset_index()
-        # g = sns.relplot(data=nbBar_revenu_byCp, x='Revenu fiscal de référence par foyer fiscal',
-        #                 y=nbBar_revenu_byCp.index)
-        # g.set(yscale='log')
-        #
-        # plt.scatter(nbBar_revenu_byCp.index, nbBar_revenu_byCp['Revenu fiscal de référence par foyer fiscal'],
-        #             label='nomalies')
-        # plt.title('Connexions en fonction de l\'instant dans le temps et la durée de la connexion')
-        # plt.ylabel('Revenu fiscal de référence moyen')
-        # plt.xlabel('Bar n°')
-        #
-        # ax = sns.lineplot(x=np.arange(len(nbBar_revenu_byCp)),
-        #                   y=np.sort(nbBar_revenu_byCp['Revenu fiscal de référence par foyer fiscal']))
-        # ax.set_title('Revenu fiscal de référence des %d bars' % len(nbBar_revenu_byCp))
-        # ax.set(yscale='log', xlabel='Nombre de bars', ylabel='Revenu fiscal de référence par foyer fiscal')
+        fig7 = px.scatter(data_frame=nbBar_revenu_byCp, x='Nombre de bars',
+                          y='Revenu fiscal de référence par foyer fiscal', log_y=True)
 
+        mean_by_bar_number = init_mean_by_bar_number(nbBar_revenu_byCp)
+        fig8 = px.line(mean_by_bar_number, x="Nombre de bars", y="Revenu fiscal de référence par foyer fiscal",
+                       title='Revenu fiscal de référence moyen en fonction du nombre de bars dans une commune', labels={
+                "Revenu fiscal de référence par foyer fiscal": "Revenu fiscal de référence moyen",
+            })
+
+        fig9 = px.histogram(data_frame=mean_by_bar_number, x='Revenu fiscal de référence par foyer fiscal',
+                            y='Nombre de bars')
+        fig10 = px.scatter(data_frame=mean_by_bar_number, y='Revenu fiscal de référence par foyer fiscal',
+                           x=mean_by_bar_number['Nombre de bars'], log_y=True)
+
+        nbBar_revenu_byCp = data_bars_revenus.groupby('Nom')[
+            'Revenu fiscal de référence par foyer fiscal'].mean().reset_index()
+        fig11 = px.scatter(data_frame=nbBar_revenu_byCp, x='Revenu fiscal de référence par foyer fiscal',
+                           y=nbBar_revenu_byCp.index, log_y=True,  labels={
+                "index": "Bar n°"})
+
+        fig12 = px.scatter(data_frame=nbBar_revenu_byCp, y='Revenu fiscal de référence par foyer fiscal',
+                           x=nbBar_revenu_byCp.index, labels={
+                "index": "Bar n°",
+                "Revenu fiscal de référence par foyer fiscal": "Revenu fiscal de référence moyen",
+
+            }, )
+        fig12.update_xaxes(tickformat="0")
+
+        fig13 = px.line(x=np.arange(len(nbBar_revenu_byCp)),
+                      y=np.sort(nbBar_revenu_byCp['Revenu fiscal de référence par foyer fiscal']), log_y=True,
+                      title='Revenu fiscal de référence des %d bars' % len(nbBar_revenu_byCp), labels={
+                "y": "Revenu fiscal de référence par foyer fiscal"})
+        fig13.update_xaxes(tickformat="0")
         self.main_layout = html.Div(children=[
             html.H3(children='Répartition des bars en France'),
             dcc.Markdown("""
@@ -150,14 +152,30 @@ class Bars():
             html.Div(
                 [dcc.Graph(id='sond_t2', figure=fig5)], style={'width': '100%', }),
             html.Br(),
-
             html.Div(
                 [dcc.Graph(id='sond_t2', figure=fig6)], style={'width': '100%', }),
             html.Br(),
-            #
-            # html.Div(
-            #     [dcc.Graph(id='sond_t2', figure=fig7)], style={'width': '100%', }),
-            #  html.Br(),
+            html.Div(
+                [dcc.Graph(id='sond_t2', figure=fig7)], style={'width': '100%', }),
+            html.Br(),
+            html.Div(
+                [dcc.Graph(id='sond_t2', figure=fig8)], style={'width': '100%', }),
+            html.Br(),
+            html.Div(
+                [dcc.Graph(id='sond_t2', figure=fig9)], style={'width': '100%', }),
+            html.Br(),
+            html.Div(
+                [dcc.Graph(id='sond_t2', figure=fig10)], style={'width': '100%', }),
+            html.Br(),
+            html.Div(
+                [dcc.Graph(id='sond_t2', figure=fig11)], style={'width': '100%', }),
+            html.Br(),
+            html.Div(
+                [dcc.Graph(id='sond_t2', figure=fig12)], style={'width': '100%', }),
+            html.Br(),
+            html.Div(
+                [dcc.Graph(id='sond_t2', figure=fig13)], style={'width': '100%', }),
+            html.Br(),
 
             dcc.Markdown("""
             En conclusion, nous avons vu que le taux de bars dépendait de :
