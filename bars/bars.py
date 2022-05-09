@@ -34,7 +34,7 @@ class Bars():
                                     color='Nombre de bars', color_continuous_scale=px.colors.sequential.turbid,
                                     mapbox_style="carto-positron",
                                     range_color=(0, 1000),
-                                    zoom=4, center={"lat": 47, "lon": 2},
+                                    zoom=3.8, center={"lat": 47, "lon": 2},
                                     opacity=0.75,
                                     animation_frame='Nombre de bars',
                                     labels={'prix': 'Nombre de bars'}
@@ -51,7 +51,7 @@ class Bars():
 
         fig4 = px.density_mapbox(data_bars, lat='Latitude', lon='Longitude', z='Département', radius=4.3,
                                  animation_frame='Département',
-                                 zoom=4.5, center={"lat": 47, "lon": 2},
+                                 zoom=3.8, center={"lat": 47, "lon": 2},
                                  mapbox_style="stamen-terrain", )
 
         fig4.update_layout(mapbox_style="carto-darkmatter")
